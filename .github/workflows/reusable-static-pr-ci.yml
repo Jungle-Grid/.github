@@ -1,0 +1,82 @@
+name: Reusable Static PR CI
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Directory to validate.
+        required: false
+        type: string
+        default: "."
+      run-secret-scan:
+        description: Run TruffleHog verified secret scan.
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  static-pr-ci:
+    name: Static PR CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate JSON files
+        run: |
+          mapfile -t files < <(find . -path './.git' -prune -o -type f \( -name '*.json' -o -name '*.json.example' \) -print)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No JSON files found."
+            exit 0
+          fi
+          python3 -m json.tool "${files[@]}" > /dev/null
+
+      - name: Validate YAML files
+        run: |
+          mapfile -t files < <(find . -path './.git' -prune -o -type f \( -name '*.yml' -o -name '*.yaml' \) -print)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No YAML files found."
+            exit 0
+          fi
+          ruby -e 'require "yaml"; ARGV.each { |path| YAML.load_file(path) }' "${files[@]}"
+
+      - name: Validate shell syntax
+        run: |
+          mapfile -t files < <(find . -path './.git' -prune -o -type f \( -name '*.sh' -o -perm -111 \) -print)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No shell files found."
+            exit 0
+          fi
+          for file in "${files[@]}"; do
+            if head -n 1 "$file" | grep -Eq '^#!.*/(env +)?(ba)?sh'; then
+              bash -n "$file"
+            elif [ "${file##*.}" = "sh" ]; then
+              bash -n "$file"
+            fi
+          done
+
+      - name: Block committed dotenv/private key files
+        run: |
+          if find . -path './.git' -prune -o -type f \( -name '.env' -o -name '.env.*' -o -name '*.pem' -o -name '*.key' \) ! -name '.env.example' -print | grep -q .; then
+            echo "Potential secret-bearing file detected. Commit examples only, such as .env.example." >&2
+            exit 1
+          fi
+
+      - name: Scan for verified secrets
+        if: inputs.run-secret-scan
+        uses: trufflesecurity/trufflehog@466da5b0bb161144f6afca9afe5d57975828c410 # v3.90.8
+        with:
+          path: ${{ inputs.working-directory }}
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified

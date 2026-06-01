@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-Please do not open public GitHub issues for security reports.
+Please do not open public GitHub issues for security reports or suspected vulnerabilities.
 
 Email: security@junglegrid.dev
 
@@ -15,4 +15,4 @@ Include:
 
 We aim to acknowledge valid reports within 72 hours.
 
-GitHub specifically recommends adding a SECURITY.md file so people know how to report vulnerabilities privately.
+Please give maintainers a reasonable opportunity to investigate and remediate before public disclosure.

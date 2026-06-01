@@ -1,0 +1,7 @@
+{
+  "name": "Node/TypeScript PR CI",
+  "description": "PR validation for npm, pnpm, yarn, or bun Node.js repositories using the Jungle Grid reusable CI workflow.",
+  "iconName": "octicon workflow",
+  "categories": ["JavaScript", "TypeScript", "Node", "Continuous integration"],
+  "filePatterns": ["package.json$"]
+}
