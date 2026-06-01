@@ -1,0 +1,7 @@
+{
+  "name": "Static Example/Docs PR CI",
+  "description": "PR validation for documentation, examples, templates, shell snippets, JSON, and YAML configuration repositories.",
+  "iconName": "octicon checklist",
+  "categories": ["Automation", "Continuous integration"],
+  "filePatterns": ["README.md$", ".*\\.json$", ".*\\.ya?ml$", ".*\\.sh$"]
+}

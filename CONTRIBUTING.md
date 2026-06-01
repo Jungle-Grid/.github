@@ -14,7 +14,9 @@ Thanks for your interest in contributing.
 - Use descriptive commit messages.
 - Link related issues in the pull request description.
 - Include before/after details for user-visible changes.
-- Ensure CI passes before requesting review.
+- Run the relevant lint, typecheck, test, build, or example validation commands before requesting review.
+- Ensure CI passes before requesting review or merge.
+- Do not include secrets, private keys, `.env` files, customer data, or production credentials.
 
 ## Reporting Issues
 
@@ -32,3 +34,7 @@ Follow existing style and conventions in the repository. Prefer readability and 
 ## Questions
 
 If you are unsure about design or scope, open an issue first to discuss.
+
+## Security Issues
+
+Do not report vulnerabilities in public issues or pull requests. Email security@junglegrid.dev and follow `SECURITY.md`.
