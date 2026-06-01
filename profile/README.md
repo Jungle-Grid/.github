@@ -1,360 +1,68 @@
-# Jungle Grid
+<div align="center">
+  <a href="https://junglegrid.dev">
+    <img src="./assets/junglegrid-logo.png" alt="Jungle Grid logo" width="128">
+  </a>
 
-**The execution layer for AI workloads and agents.**
+  <h1>Jungle Grid</h1>
 
-Jungle Grid lets developers submit AI workloads by intent - inference, training, fine-tuning, and batch jobs - without manually choosing GPUs, regions, providers, pods, or infrastructure settings.
+  <p><strong>The execution layer for AI workloads and agents.</strong></p>
 
-Instead of asking developers to think like cloud infrastructure engineers, Jungle Grid lets them say what they want to run. The platform handles placement, routing, execution, logs, lifecycle tracking, and recovery across available GPU capacity.
-
-Website: https://junglegrid.dev  
-Docs: https://junglegrid.dev/docs
-
----
-
-## What is Jungle Grid?
-
-Jungle Grid is a GPU orchestration platform built for AI teams, developers, and agents.
-
-Modern AI workloads are hard to run because developers often have to answer low-level infrastructure questions before they can even execute a job:
-
-- Which GPU should I pick?
-- Is this model too large for the available VRAM?
-- Which provider has capacity right now?
-- What happens if the node fails?
-- How do I track logs and job state?
-- How does my AI agent run real workloads safely?
-
-Jungle Grid abstracts that complexity.
-
-Developers describe the workload, and Jungle Grid handles the execution layer underneath.
+  <p>
+    <a href="https://junglegrid.dev"><img alt="Jungle Grid website" src="https://img.shields.io/badge/Website-junglegrid.dev-111827?style=for-the-badge"></a>
+    <a href="https://junglegrid.dev/docs"><img alt="Jungle Grid docs" src="https://img.shields.io/badge/Docs-Read_the_docs-2563eb?style=for-the-badge"></a>
+    <a href="https://github.com/Jungle-Grid/mcp-server"><img alt="Jungle Grid MCP server" src="https://img.shields.io/badge/MCP-Server_repo-7c3aed?style=for-the-badge"></a>
+    <a href="https://discord.com/invite/kpJqxXFFCs"><img alt="Join the Jungle Grid Discord" src="https://img.shields.io/badge/Discord-Join-5865f2?style=for-the-badge&logo=discord&logoColor=white"></a>
+    <a href="https://x.com/jungle_grid"><img alt="Follow Jungle Grid on X" src="https://img.shields.io/badge/X-@jungle__grid-000000?style=for-the-badge&logo=x"></a>
+    <a href="mailto:run@junglegrid.dev"><img alt="Email Jungle Grid" src="https://img.shields.io/badge/Email-run@junglegrid.dev-16a34a?style=for-the-badge"></a>
+  </p>
+</div>
 
 ---
 
-## Core idea
+Jungle Grid lets developers and AI agents run inference, training, fine-tuning, and batch workloads without manually managing GPUs, regions, providers, pods, or infrastructure settings.
 
-Traditional GPU platforms start with hardware:
+Submit workload intent. Jungle Grid handles placement, routing, execution, lifecycle tracking, logs, retries and recovery, and artifact retrieval across available GPU capacity.
 
-> Pick a GPU.  
-> Pick a region.  
-> Configure a pod.  
-> Manage execution yourself.
+## What Jungle Grid Does
 
-Jungle Grid starts with workload intent:
+Jungle Grid turns AI workload intent into managed execution:
 
-> Run this inference job.  
-> Fine-tune this model.  
-> Execute this batch workload.  
-> Let my agent submit and monitor this job.
-
-Jungle Grid then decides how and where the workload should run.
-
----
-
-## What Jungle Grid handles
-
-Jungle Grid provides:
-
-- Workload-first job submission
-- Intent-based workload classification
-- GPU fit checks based on workload requirements
-- Routing across available compute capacity
-- Provider-aware placement
-- Managed job execution
-- Job lifecycle tracking
-- Live and historical logs
-- Retry and recovery behavior
-- Artifact handling
-- CLI-based developer workflow
-- API/service integration
-- MCP integration for AI agents
-
----
-
-## Supported workload types
-
-Jungle Grid is designed for AI workloads such as:
-
-- Inference
-- Training
-- Fine-tuning
-- Batch jobs
-- Model evaluation
-- Data processing
-- Agent-triggered compute tasks
-
----
-
-## Why Jungle Grid exists
-
-AI development is moving toward agents, automation, and workload-level execution.
-
-But most compute platforms still expose infrastructure-first primitives. That means developers and agents still need to think about GPU types, pod management, regions, capacity failures, and operational details.
-
-Jungle Grid exists to make compute feel closer to an execution layer:
+- Classifies workload type and execution requirements.
+- Routes jobs across available GPU capacity.
+- Tracks job state, logs, failures, retries, and artifacts.
+- Gives developers one control plane across portal, CLI, API, and MCP entry points.
 
 ```text
-Intent -> Routing -> GPU placement -> Execution -> Logs -> Results
+Intent -> Routing -> GPU placement -> Execution -> Logs -> Artifacts
 ```
 
-The goal is simple:
+## Built For Developers And Agents
 
-Developers and agents should submit workloads, not manage GPU infrastructure.
+Jungle Grid is designed for teams building systems that need real compute without exposing every infrastructure decision to the caller.
 
----
+- Developers can submit and monitor jobs without becoming GPU operations engineers.
+- AI agents can estimate, launch, inspect, cancel, and retrieve results from workload runs.
+- Internal tools can connect to a workload execution layer instead of directly managing provider-specific GPU primitives.
 
-## Quick start
+## Ways To Use Jungle Grid
 
-Install and authenticate with the Jungle Grid CLI:
+| Surface | Use it for |
+| --- | --- |
+| Portal | Submit workloads, inspect jobs, review logs, and retrieve outputs from the web. |
+| CLI | Run and automate jobs from local development, CI, and terminal workflows. |
+| API | Integrate Jungle Grid into products, internal platforms, and backend services. |
+| MCP | Give AI agents a controlled interface for estimating, submitting, tracking, and cancelling workloads. |
 
-```bash
-npx @jungle-grid/cli@latest login
-```
+## Open Source And MCP
 
-This command runs the Jungle Grid CLI without requiring a global install and starts the login flow.
+MCP is one major integration surface for Jungle Grid, enabling agent-facing compute workflows through MCP-compatible clients.
 
-Check your authenticated user:
+- [Jungle Grid MCP Server](https://github.com/Jungle-Grid/mcp-server) exposes tools for estimating, submitting, tracking, cancelling, reading logs, and retrieving artifacts.
+- The hosted MCP endpoint connects agent workflows to the Jungle Grid API while keeping scheduling, routing, billing, and artifact storage in the platform layer.
 
-```bash
-npx @jungle-grid/cli@latest whoami
-```
+## Get Started
 
-This command confirms that the CLI is connected to your Jungle Grid account.
-
-Submit an inference workload:
-
-```bash
-npx @jungle-grid/cli@latest submit \
-  --workload inference \
-  --model-size 7 \
-  --image pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime \
-  --name chat-infer
-```
-
-This command submits an inference job, tells Jungle Grid the approximate model size, provides the container image to run, and gives the job a readable name.
-
-Check jobs:
-
-```bash
-npx @jungle-grid/cli@latest jobs
-```
-
-This command lists your submitted workloads.
-
-Check the status of a specific job:
-
-```bash
-npx @jungle-grid/cli@latest status <job-id>
-```
-
-This command shows the current lifecycle state of a submitted job.
-
----
-
-## CLI workflow
-
-The Jungle Grid CLI is built around a simple loop:
-
-```text
-login -> submit workload -> inspect status -> view logs -> collect results
-```
-
-The CLI lets developers interact with Jungle Grid from their terminal without manually managing GPU servers or provider dashboards.
-
----
-
-## MCP for agents
-
-Jungle Grid includes an MCP layer so AI agents can submit and monitor workloads from inside agent workflows.
-
-This allows agentic systems to move from planning to execution.
-
-Instead of only suggesting that a workload should run, an agent can use Jungle Grid to:
-
-- Estimate a workload
-- Submit a job
-- Monitor job state
-- Retrieve logs
-- Track completion
-- Reason over execution results
-
-This makes Jungle Grid useful as an execution backend for AI coding agents, internal automation agents, research agents, and developer tools.
-
----
-
-## Example use cases
-
-Jungle Grid can be used for:
-
-- Running model inference without managing GPUs
-- Testing AI workloads across available capacity
-- Running batch processing jobs
-- Triggering compute from an AI agent
-- Fine-tuning models
-- Building developer tools that need GPU-backed execution
-- Creating automation workflows that require real compute
-- Abstracting GPU complexity away from end users
-
----
-
-## Platform architecture
-
-At a high level, Jungle Grid includes:
-
-```text
-Developer / Agent
-      |
-      v
-CLI / API / MCP
-      |
-      v
-Jungle Grid Orchestrator
-      |
-      v
-Scheduler and Routing Layer
-      |
-      v
-GPU Capacity Providers / Nodes
-      |
-      v
-Workload Execution
-      |
-      v
-Logs, Status, Artifacts, Results
-```
-
-The platform is built around separating workload intent from infrastructure execution.
-
----
-
-## Core components
-
-### Orchestrator
-
-The orchestrator receives jobs, validates workload intent, tracks lifecycle state, and coordinates execution.
-
-### Scheduler
-
-The scheduler evaluates workload requirements, available capacity, GPU fit, provider health, and execution constraints.
-
-### Node agent
-
-The node agent connects compute nodes to Jungle Grid and allows workloads to run on available GPU capacity.
-
-### Provider integrations
-
-Jungle Grid can route workloads across compatible GPU capacity providers instead of locking execution into one provider model.
-
-### CLI
-
-The CLI gives developers a simple terminal interface for login, submission, inspection, and job tracking.
-
-### MCP server
-
-The MCP server allows AI agents and MCP-compatible tools to interact with Jungle Grid as an execution layer.
-
----
-
-## Why not just rent a GPU?
-
-Renting a GPU gives you hardware.
-
-Jungle Grid gives you an execution workflow.
-
-With raw GPU rentals, you often still need to:
-
-- Choose the GPU manually
-- Check VRAM fit yourself
-- Configure the environment
-- Handle provider capacity issues
-- Track job state
-- Manage logs
-- Retry failed jobs
-- Build agent integration yourself
-
-Jungle Grid is designed to sit above that layer.
-
-The goal is not simply to expose GPUs.
-
-The goal is to make AI workload execution easier, safer, and more automated.
-
----
-
-## Jungle Grid is for
-
-- AI developers
-- ML engineers
-- AI startups
-- Agent builders
-- Developer tool companies
-- Research teams
-- Infrastructure teams
-- Builders who need GPU execution without GPU operations overhead
-
----
-
-## Current focus
-
-Jungle Grid is currently focused on:
-
-- Reliable workload submission
-- Inference execution
-- CLI and API workflows
-- Live logs and job lifecycle visibility
-- MCP-based agent execution
-- Provider-aware routing
-- Improving cold-start and execution reliability
-- Making GPU-backed jobs easier for developers to run
-
----
-
-## Public repositories
-
-This GitHub organization will host public developer-facing Jungle Grid projects, including:
-
-- CLI tools
-- MCP server examples
-- SDKs
-- Workload templates
-- Example jobs
-- Integration guides
-- Community resources
-
-Core platform services may remain private while the system is under active development.
-
----
-
-## Documentation
-
-Read the docs here:
-
-https://junglegrid.dev/docs
-
-The docs cover:
-
-- Getting started
-- CLI usage
-- Job submission
-- Provider setup
-- API usage
-- MCP integration
-- Workload examples
-
----
-
-## Community and support
-
-For questions, feedback, or early access:
-
-Website: https://junglegrid.dev  
-Docs: https://junglegrid.dev/docs  
-Email: support@junglegrid.dev
-
-For security issues, please do not open a public issue. Email:
-
-security@junglegrid.dev
-
----
-
-## One-line summary
-
-Jungle Grid lets developers and agents run AI workloads by intent, while the platform handles GPU placement, routing, execution, logs, and recovery.
+- Visit [junglegrid.dev](https://junglegrid.dev) for the product overview.
+- Read the [Jungle Grid docs](https://junglegrid.dev/docs) for setup and integration guides.
+- Join the [Discord community](https://discord.com/invite/kpJqxXFFCs) for questions and updates.
+- Contact the team at [run@junglegrid.dev](mailto:run@junglegrid.dev).
