@@ -39,7 +39,9 @@ jobs:
             echo "No JSON files found."
             exit 0
           fi
-          python3 -m json.tool "${files[@]}" > /dev/null
+          for file in "${files[@]}"; do
+            python3 -m json.tool "$file" > /dev/null
+          done
 
       - name: Validate YAML files
         run: |
